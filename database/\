@@ -1,0 +1,37 @@
+#!/usr/bin/python3
+
+import sqlite3 as sql
+
+def connectDB(dbname):
+    conn = sql.connect(dbname)
+    return conn
+
+    
+class Files(sql.Cursor):
+    def __init___(self, connection = None):
+        super().__init__(connection)
+
+    def createTable(self):
+        self.execute("CREATE TABLE IF NOT EXiSTS {} (".format("files") + \
+        "id INTEGER PRIMARY KEY AUTOINCREMENT,"    \
+        "name TEXT NOT NULL,"   \
+        "extension TEXT NOT NULL,"  \
+        "date TEXT NOT NULL,"   \
+        "directory TEXT NOT NULL,"  \
+        "owner TEXT NOT NULL"   \
+        ")"
+        )
+
+    def insertData(data):
+        self.execute("INSERT INTO {} VALUES (?,?,?,?,?)",arry_of_tupes_type)
+    def insertDataMulti(data):
+        pass
+    def updateData():
+        pass
+    
+
+if __name__ == "__main__":
+    conn = connectDB("test.db")
+    file_db = Files(conn)
+    file_db.createTable()
+    conn.close()
