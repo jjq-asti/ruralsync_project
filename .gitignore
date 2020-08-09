@@ -1,2 +1,5 @@
 #compressed files
 files/
+
+#Database
+*.db
