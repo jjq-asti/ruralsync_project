@@ -82,18 +82,17 @@ class Application(ttk.Frame):
         self.TreeView.delete(self.item)
 
     def _Carousel(self):
-        if self.carouselState.get():
-            conn = db.connectDB("test.db")
-            self.Filedb = Files(conn)
-            #rec = self.Filedb.getDataUsingId(self.item_id)
-            for i in self.rows:
-                if i[0] == self.item_id:
-                    abspath = path.join(i[5],i[1]) + "." + i[2]
-                    print("ABS PATH " + abspath)
-                    self.Filedb.updateCarousel(self.carouselState.get(), self.item_id)
-                    conn.commit()
-                    conn.close()
-                    #zipper.multizip(fn,abspath)
+        conn = db.connectDB("test.db")
+        self.Filedb = Files(conn)
+        rec = self.Filedb.getDataUsingId(self.item_id)
+        print(rec)
+        if rec[0] == self.item_id:
+            abspath = path.join(rec[5],rec[1]) + "." + rec[2]
+            print("CS ", self.carouselState.get())
+            self.Filedb.updateCarousel(self.item_id,self.carouselState.get())
+            conn.commit()
+            conn.close()
+            zipper.multizip(abspath,"/home/jay/ruralsync_project/files/"+rec[1]+"."+rec[2]+"_"+".zip")
 
     def _openFileExplorer(self,event):
         abspath = getcwd()
@@ -130,7 +129,7 @@ class Application(ttk.Frame):
         size = kwargs["size"]
         date = kwargs["date"]
         fdir = kwargs["dir"] 
-        carousel = self.carouselState.get()
+        carousel = 0
         owner = kwargs["owner"]
 
         return (name,extension,date,size,fdir,owner,carousel)
@@ -147,8 +146,8 @@ class Application(ttk.Frame):
             self.Filedb = Files(conn)
             CS = self.Filedb.getCarouselStatus(self.item_id)
             conn.close()
-
             self.carouselState.set(CS)
+        
 
 
 
@@ -161,6 +160,7 @@ style.configure("TButton", background="tomato")
 style.configure("Remove.TButton",background="red")
 style.configure("bottom.TFrame", width=40)
 app = Application(master=root)
+#root.protocol("WM_DELETE_WINDOW",app.on_close_window)
 app.mainloop()
 
 
